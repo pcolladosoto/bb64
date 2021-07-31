@@ -35,7 +35,6 @@ void encode_b64(int fd) {
     int i, redb, offset;
 
     while((redb = read(fd, &buffer, BUFSIZE))) {
-        printf("%X -> %X\n", buffer, flip_buffer(buffer));
         buffer = flip_buffer(buffer);
         #ifdef DBG
             printf("* DBGB *\n");
@@ -47,36 +46,19 @@ void encode_b64(int fd) {
         for (i = 0; i < 4; i++) {
             if (i <= redb) {
                 offset = (buffer & (0x3F << (26 - i * 6))) >> (26 - i * 6);
-                printf("%c [%d]\n", b64_dict[offset], offset);
+                printf("%c", b64_dict[offset]);
             }
             else
-                printf("%c [Padding]\n", '=');
+                printf("=");
         }
 
-        // memset(buffer, 0, BUFSIZE);
         buffer = 0;
     }
-
-    // do {
-    //     memset(buffer, 0, BUFSIZE);
-    //     redb = read(fd, buffer, BUFSIZE);
-    //     #ifdef DBG
-    //         printf("* DBGB *\n");
-    //         for (i = 0; i < BUFSIZE; i++)
-    //             printf("\t%c [%X]\n", buffer[i], buffer[i]);
-    //         printf("* DBGE *\n");
-    //     #endif
-
-    // } while(redb == BUFSIZE);
+    printf("\n");
 }
 
 unsigned int flip_buffer(unsigned int foo) {
     int i, tmp = 0;
-    // for (i = 0; i < size / 2; i++) {
-    //     tmp = ptr[0];
-    //     ptr[0] = ptr[size - (i + 1)];
-    //     ptr[size - (i + 1)] = tmp;
-    // }
     for (i = 0; i < (int) sizeof(unsigned int); i++)
         tmp |= ((foo & 0xFF << (i * 8)) >> (i * 8)) << ((3 - i) * 8);
     return tmp;
