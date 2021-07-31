@@ -6,7 +6,7 @@ PROGS = bb64
 TRASH = *.o
 
 # Enable debugging output
-DBGFLAGS = -DDBG
+# DBGFLAGS = -DDBG
 
 all: $(PROGS)
 
