@@ -35,7 +35,8 @@ void encode_b64(int fd) {
     int i, redb, offset;
 
     while((redb = read(fd, &buffer, BUFSIZE))) {
-        buffer = flip_buffer(buffer);
+        if (is_little_endian())
+            buffer = flip_buffer(buffer);
         #ifdef DBG
             printf("* DBGB *\n");
             for (i = 24; i > 0; i -= 8)
@@ -62,4 +63,9 @@ unsigned int flip_buffer(unsigned int foo) {
     for (i = 0; i < (int) sizeof(unsigned int); i++)
         tmp |= ((foo & 0xFF << (i * 8)) >> (i * 8)) << ((3 - i) * 8);
     return tmp;
+}
+
+int is_little_endian(void) {
+    int x = 1;
+    return (int) *((char*) &x);
 }
