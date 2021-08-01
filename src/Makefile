@@ -16,7 +16,10 @@ bb64: bb64.o
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS) $(DBGFLAGS)
 
-.PHONY: clean
+.PHONY: test clean
+
+test: all
+	bash tests/run_tests.sh
 
 clean:
 	rm -f $(PROGS) $(TRASH)
