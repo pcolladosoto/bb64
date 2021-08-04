@@ -4,9 +4,13 @@
 #include <errno.h>
 #include <string.h>
 
-#include "bb64.h"
+#define ENC_BATCH 3
 
-#define BUFSIZE	3
+char* b64_dict = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+void encode_b64(int);
+unsigned int flip_buffer(unsigned int);
+int is_little_endian(void);
 
 int main(int argc, char** argv) {
     if (argc != 2) {
@@ -29,13 +33,12 @@ int main(int argc, char** argv) {
 }
 
 void encode_b64(int fd) {
-    // Careful with ENDIANNESS...
     unsigned int buffer = 0;
 
-    int i, redb, offset;
+    int i, redb, offset, little_endian = is_little_endian();
 
-    while((redb = read(fd, &buffer, BUFSIZE))) {
-        if (is_little_endian())
+    while((redb = read(fd, &buffer, ENC_BATCH))) {
+        if (little_endian)
             buffer = flip_buffer(buffer);
         #ifdef DBG
             printf("* DBGB *\n");
