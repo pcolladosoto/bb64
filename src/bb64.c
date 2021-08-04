@@ -23,9 +23,7 @@ int main(int argc, char** argv) {
     int fd = open(argv[argc - 1], O_RDONLY);
 
     if (fd == -1) {
-        #ifdef DBG
-            fprintf(stderr, "Error opening %s: %s\n", argv[1], strerror(errno));
-        #endif
+        fprintf(stderr, "Error opening %s: %s\n", argv[argc - 1], strerror(errno));
         return -1;
     }
 
@@ -95,7 +93,6 @@ void decode_b64(int fd) {
 
         int_buffer = padding = 0;
     }
-    printf("\n");
 }
 
 unsigned int flip_buffer(unsigned int foo) {
