@@ -18,5 +18,17 @@ do
     fi
 done
 
+echo -e "Running Base64 -> Data tests..."
+for test in $(ls -1 b64_to_data/*.txt)
+do
+    echo $(../bb64 -d $test) | diff -qw - $(echo $test | awk '{split($0, foo, "."); print foo[1] ".target"}') > /dev/null 2>&1
+    if [ $? -eq 0 ]
+    then
+        echo -e "\t\x1B[38;2;0;255;0mPassed\x1B[0m $test"
+    else
+        echo -e "\t\x1B[38;2;255;0;0mFailed\x1B[0m $test"
+    fi
+done
+
 # Always tell 'make' everything is okay so that it doesn't complain...
 exit 0
